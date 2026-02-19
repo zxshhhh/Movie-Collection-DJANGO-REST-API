@@ -12,7 +12,7 @@ class MovieAPITest(TestCase):
             "title": "Inception",
             "director": "Christopher Nolan",
             "release_year": 2010,
-            "rating": 8.8
+            "rating": 5
         }
 
     def test_create_movie(self):

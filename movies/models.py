@@ -13,7 +13,7 @@ class Movie(models.Model):
     )
     rating = models.FloatField(
         validators=[
-            MinValueValidator(0.0),
+            MinValueValidator(1.0),
             MaxValueValidator(5.0)
         ]
     )
