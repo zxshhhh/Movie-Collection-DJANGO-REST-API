@@ -11,6 +11,7 @@ class Movie(models.Model):
         HORROR = 'HORROR', 'Horror'
         SCI_FI = 'SCI_FI', 'Sci-Fi'
         ROMANCE = 'ROMANCE', 'Romance'
+        FANTASY = 'FANTASY', 'Fantasy'
     title = models.CharField(max_length=200)
     description = models.TextField(default="No description available.")
     director = models.CharField(max_length=150)
