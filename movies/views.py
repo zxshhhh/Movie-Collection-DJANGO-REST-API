@@ -5,10 +5,13 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Movie
 from .serializers import MovieSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['genre', 'director']
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
