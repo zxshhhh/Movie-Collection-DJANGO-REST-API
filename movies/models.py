@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.db.models import Avg
 import datetime
-    
+
 class Movie(models.Model):
     class GenreChoices(models.TextChoices):
         ACTION = 'ACTION', 'Action'
@@ -29,9 +30,37 @@ class Movie(models.Model):
         validators=[
             MinValueValidator(1.0),
             MaxValueValidator(5.0)
-        ]
+        ],
+        default=1.0
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
+    def average_rating(self):
+        return self.reviews.aggregate(
+            avg_rating=Avg("rating")
+        )["avg_rating"] or 0
+
+    def review_count(self):
+        return self.reviews.count()
+
     def __str__(self):
         return f"{self.title} ({self.release_date.year})"
+
+class Review(models.Model):
+    movie = models.ForeignKey(
+        Movie,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+    reviewer_name = models.CharField(max_length=100)
+    rating = models.FloatField(
+        validators=[
+            MinValueValidator(1.0),
+            MaxValueValidator(5.0)
+        ]
+    )
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.reviewer_name} - {self.movie.title}"

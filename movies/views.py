@@ -5,6 +5,8 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Movie
 from .serializers import MovieSerializer
+from django.db.models import Count
+from datetime import timedelta
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
@@ -17,18 +19,20 @@ class MovieViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False)
     def popular(self, request, *args, **kwargs):
-        movies = Movie.objects.order_by('-views')[:10]
+        movies = Movie.objects.annotate(
+            review_count=Count("reviews")
+        ).order_by("-review_count")[:10]
         serializer = self.get_serializer(movies, many=True)
         return Response(serializer.data)
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False)
     def trending(self, request, *args, **kwargs):
         last_week = timezone.now() - timedelta(days=7)
         movies = Movie.objects.filter(
-            created_at__gte=last_week
-        ).order_by('-views')[:10]
+            reviews__created_at__gte=last_week
+        ).distinct()
         serializer = self.get_serializer(movies, many=True)
         return Response(serializer.data)
     
