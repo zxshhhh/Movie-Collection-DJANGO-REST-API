@@ -4,27 +4,14 @@ from rest_framework.response import Response
 from django.utils import timezone
 from datetime import timedelta
 from .models import Movie
+from .models import Review
 from .serializers import MovieSerializer
+from .serializers import ReviewSerializer
 from django.db.models import Count
-from datetime import timedelta
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['genre', 'director']
-    search_fields = ['title', 'description', 'director']
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.views += 1
-        instance.save()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
     
     @action(detail=False)
     def popular(self, request, *args, **kwargs):
@@ -48,3 +35,7 @@ class MovieViewSet(viewsets.ModelViewSet):
         movies = Movie.objects.order_by('-release_date')[:10]
         serializer = self.get_serializer(movies, many=True)
         return Response(serializer.data)
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer

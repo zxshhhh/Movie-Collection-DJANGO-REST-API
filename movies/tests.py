@@ -11,6 +11,7 @@ class MovieAPITest(TestCase):
             "title": "Inception",
             "description": "A mind-bending thriller.",
             "director": "Christopher Nolan",
+            "views": 1000239434,
             "release_date": "2010-07-16",
             "rating": 5.0,
             "genre": "SCI_FI"
