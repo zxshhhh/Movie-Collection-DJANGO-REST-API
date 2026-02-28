@@ -11,9 +11,9 @@ class MovieSerializer(serializers.ModelSerializer):
         if len(value) < 2:
             raise serializers.ValidationError("Title must be at least 2 characters long.")
         return value
-    def validate_release_year(self, value):
+    def validate_release_date(self, value):
         if value > timezone.now().date():
-            raise serializers.ValidationError("Release year cannot be in the future.")
+            raise serializers.ValidationError("Release date cannot be in the future.")
         if value < datetime.date(1970, 1, 1):
-            raise serializers.ValidationError("Release year cannot be before 1970.")
+            raise serializers.ValidationError("Release date cannot be before 1970.")
         return value

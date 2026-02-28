@@ -12,6 +12,7 @@ class Movie(models.Model):
         HORROR = 'HORROR', 'Horror'
         SCI_FI = 'SCI_FI', 'Sci-Fi'
         ROMANCE = 'ROMANCE', 'Romance'
+        FANTASY = 'FANTASY', 'Fantasy'
     title = models.CharField(max_length=200)
     description = models.TextField(default="No description available.")
     director = models.CharField(max_length=150)
@@ -43,6 +44,8 @@ class Movie(models.Model):
     def review_count(self):
         return self.reviews.count()
 
+    is_active = models.BooleanField(default=True)
+    
     def __str__(self):
         return f"{self.title} ({self.release_date.year})"
 
